@@ -82,22 +82,56 @@ Run /rank: Score all vetted vacancies in outputs/discovered_roles.json from 0-10
 Run /apply: Select the #1 top-ranked role from outputs/fit_score_matrix.md, execute the Drafter-Reviewer loop to tailor resume achievements from inputs/draft_resume.md, and write the verified application pack to outputs/tailored_application.md.
 ```
 
----
-
-#### All-in-One Autonomous Run (`/job-autopilot`)
+#### Command 5: `/verify` (Fact Guard Zero-Hallucination Audit)
 ```text
-Run /job-autopilot: Execute /setup -> /scrape -> /rank -> /apply sequentially to build all files in outputs/ from inputs/ in one continuous autonomous loop.
+Run /verify: Audit outputs/tailored_application.md against candidate ground truth facts. Check every number, metric, tech tool, and credential to ensure zero fabricated claims.
+```
+*Or via terminal:*
+```bash
+python3 scripts/fact_guard.py outputs/tailored_application.md
+```
+
+#### Command 6: `/startups` (Hacker News & Startup Job Radar)
+```text
+Run /startups: Query Hacker News monthly "Who is hiring?" and Y Combinator active job feeds. Extract direct founder and recruiter emails, filter for remote roles, and build outputs/startup_radar.md.
+```
+*Or via terminal:*
+```bash
+python3 scripts/hn_startups.py 15
+```
+
+#### Command 7: `/email <company>` (Outreach Email & Interview Reply Drafter)
+```text
+Run /email: Generate a tailored cold application email with a pre-filled mailto: link for one-click opening in your default mail app, plus interview response templates.
+```
+*Or via terminal:*
+```bash
+python3 scripts/email_drafter.py Sidekick
+```
+
+#### Command 8: `/track` (Application Funnel & Kanban Tracker)
+```text
+Run /track: View your active job applications, update stages (Draft -> Sent -> Screening -> Interview -> Offer), record interview dates, and monitor funnel conversion metrics.
+```
+*Or via terminal:*
+```bash
+python3 scripts/tracker.py list
+python3 scripts/tracker.py move app-1 INTERVIEW --interview-date "2026-11-05 14:00 EST" --note "Technical system design round"
+python3 scripts/tracker.py stats
+```
+
+#### Command 9: Claude MCP Connector
+Connect RayCodes tools to Claude Desktop or Antigravity IDE:
+```bash
+python3 scripts/mcp_server.py
 ```
 
 ---
 
-## 🔮 Future Feature Roadmap
-
-- [ ] **Interactive Mock Interview Coach:** Generate customized technical question sets and live roleplay interview drills based on matched job requirements.
-- [ ] **Automated Portal Scraper Plugins:** Modular adapters for Greenhouse, Lever, Workday, and regional niche boards.
-- [ ] **Instant Notification Integrations:** Real-time Telegram/Discord alerts whenever a 90+ fit score role is discovered.
-- [ ] **Browser-Assisted Auto-Fill Assistant:** Human-in-the-loop form pre-fill for job portal applications without full auto-submitting.
-- [ ] **Longitudinal Application Tracker:** Analytics dashboard tracking callback rates, response latency, and interview progression.
+#### All-in-One Autonomous Run (`/job-autopilot`)
+```text
+Run /job-autopilot: Execute /setup -> /scrape -> /startups -> /rank -> /apply -> /verify -> /email -> /track sequentially in one continuous autonomous loop.
+```
 
 ---
 
@@ -105,12 +139,30 @@ Run /job-autopilot: Execute /setup -> /scrape -> /rank -> /apply sequentially to
 
 ```text
 ├── inputs/
-│   ├── candidate_profile.json  # Candidate preferences & search boundaries
-│   └── draft_resume.md         # Baseline candidate resume draft
+│   ├── candidate_profile.json  # Candidate preferences, skills, & target boundaries
+│   ├── draft_resume.md         # Baseline candidate resume & verified metrics
+│   └── resume_single_column.pdf# Clean compiled ATS single-column PDF
+├── scripts/
+│   ├── fact_guard.py           # Fact verification engine (zero hallucination audit)
+│   ├── hn_startups.py          # Hacker News & YC startup radar scanner
+│   ├── tracker.py              # Application funnel & Kanban board manager
+│   ├── email_drafter.py        # Cold outreach & interview reply generator
+│   ├── mcp_server.py           # Model Context Protocol server (Claude / Antigravity)
+│   └── ai_config.py            # Local (Ollama/LM Studio) & cloud provider manager
 ├── outputs/
-│   ├── discovered_roles.json   # Sanitized job vacancies
+│   ├── discovered_roles.json   # Sanitized job portal vacancies
+│   ├── startup_roles.json      # Discovered startup jobs with direct emails
+│   ├── startup_radar.md        # Human-readable startup job radar
 │   ├── fit_score_matrix.md     # Bounded scoring rubric & gap evaluation
-│   └── tailored_application.md # Tailored ATS resume & cover letter
+│   ├── tailored_application.md # Verified tailored resume & cover letter
+│   ├── tailored_application.pdf# Compiled ATS PDF ready to send
+│   ├── fact_guard_report.md    # Fact verification audit results
+│   ├── application_email.md    # Ready-to-send email with mailto: link
+│   ├── application_board.json  # Application records and stage history
+│   └── application_board.md    # Visual Kanban board & conversion rates
+├── .agents/skills/ai-job-search/
+│   └── SKILL.md                # Agent skill definition and pipeline commands
+├── .env.example                # Multi-model configuration (Local Ollama, LM Studio, Claude)
 └── README.md                   # Quick start & agent execution guide
 ```
 
@@ -118,11 +170,13 @@ Run /job-autopilot: Execute /setup -> /scrape -> /rank -> /apply sequentially to
 
 ## 🛡️ Core Guarantees
 
-- **Untrusted Input Sandbox:** External job descriptions are isolated as untrusted data to block prompt injections.
-- **Strict Grounding:** The drafter agent is locked to your draft resume; experiences are never invented.
-- **Human in the Loop:** Applications are prepared for your review—no automated submission without your approval.
+- **Zero Hallucination Fact Guard:** Every metric, date, tool, and degree is checked against your draft resume before you send an application.
+- **Untrusted Input Sandbox:** External job descriptions are isolated as untrusted data to block prompt injection attacks.
+- **Direct Founder Outreach:** Finds unlisted startup openings and direct recruiter/founder email addresses on Hacker News and Y Combinator.
+- **Funnel & Callback Analytics:** Tracks every stage from draft to offer, giving you visibility into your interview conversion rates.
+- **100% Private & Local:** Runs on your machine with zero cloud dependency required. Compatible with local models via Ollama and LM Studio.
 
 ---
 
 ## 🏷️ Search Keywords & Tags
-`ai job search`, `career agent`, `ats resume`, `job hunter`, `resume builder`, `job automation`, `job scraper`, `github ai job search`, `ai job search github`, `madslorentzen ai job search`, `claude job search`, `autonomous career agent`, `local ai job search`, `ats resume builder`, `linkedin scraper`, `hacker news hiring`, `remoteok jobs`, `applicant tracking system`, `ats friendly resume`, `python career agent`, `open source job hunter`, `ray codes ai job search`, `automated applications`, `skill gap analysis`
+`ai job search`, `career agent`, `ats resume`, `job hunter`, `resume builder`, `job automation`, `job scraper`, `github ai job search`, `ai job search github`, `madslorentzen ai job search`, `claude job search`, `autonomous career agent`, `local ai job search`, `ats resume builder`, `linkedin scraper`, `hacker news hiring`, `remoteok jobs`, `applicant tracking system`, `ats friendly resume`, `python career agent`, `open source job hunter`, `ray codes ai job search`, `automated applications`, `skill gap analysis`, `fact guard`, `application tracker`, `dossier`
